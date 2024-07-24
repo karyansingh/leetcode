@@ -1,27 +1,31 @@
 class Solution {
     public int[] sortJumbled(int[] mapping, int[] nums) {
-        Map<Integer,Integer> hm=new HashMap<>();
-        for(int i=0;i<nums.length;i++)
-        {
-            int temp=nums[i];
-            int num=0;
-            int mul=1;
-            if(temp==0)
-            num=mapping[0];
-            else
-            while(temp>0)
-            {
-                int rem=temp%10;
-                num=mapping[rem]*mul+num;
-                mul*=10;
-                temp/=10;
+        // Step 1: Create a list to store original nums and their mapped values
+        List<int[]> mappedList = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            String s = Integer.toString(nums[i]);
+            StringBuilder n = new StringBuilder();
+            for (char ch : s.toCharArray()) {
+                n.append(mapping[ch - '0']);
             }
-            hm.put(nums[i],num);
+            mappedList.add(new int[]{nums[i], Integer.parseInt(n.toString()), i});
         }
-        Integer[] res=Arrays.stream(nums).boxed().toArray(Integer[]::new);
-        Arrays.sort(res,(a,b)->Integer.compare(hm.get(a),hm.get(b)));
-        for(int i=0;i<nums.length;i++)
-        nums[i]=res[i];
-        return nums;
+
+        // Step 2: Sort the list based on the mapped values and original indices for stability
+        mappedList.sort((a, b) -> {
+            if (a[1] != b[1]) {
+                return Integer.compare(a[1], b[1]);
+            } else {
+                return Integer.compare(a[2], b[2]);
+            }
+        });
+
+        // Step 3: Create a result array and fill it with the sorted original nums
+        int[] sortedNums = new int[nums.length];
+        for (int i = 0; i < mappedList.size(); i++) {
+            sortedNums[i] = mappedList.get(i)[0];
+        }
+
+        return sortedNums;
     }
 }
