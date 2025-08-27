@@ -3,11 +3,11 @@ class Solution {
     {
         if(n==0 && m==0)
         return arr[n][m];
-        
+
         if(n<0 || m<0)
         return Integer.MAX_VALUE;
 
-        if(dp[n][m]!=-1)
+        if(dp[n][m]!=0)
         return dp[n][m];
 
         int up=(n > 0) ? arr[n][m] + helper(n - 1, m, arr, dp) : Integer.MAX_VALUE;
@@ -21,8 +21,8 @@ class Solution {
         int n=grid.length;
         int m=grid[0].length;
         int dp[][]=new int[n][m];
-        for(int[] ele:dp)
-        Arrays.fill(ele,-1);
+        // for(int[] ele:dp)
+        // Arrays.fill(ele,-1);
         return helper(n-1,m-1,grid,dp);
     }
 }
