@@ -1,24 +1,33 @@
 class Solution {
-    public int helper(int n,int m,int[][] arr,int dp[][])
-    {
-        if(n<0 || m<0 || arr[n][m]==1)
-        return 0;
-        if(n==0 && m==0)
-        return 1;
-
-        if(dp[n][m]!=-1)
-        return dp[n][m];
-
-        int up=helper(n-1,m,arr,dp);
-        int left=helper(n,m-1,arr,dp);
-        return dp[n][m]=up+left;
-    }
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
-        int n=obstacleGrid.length;
-        int m=obstacleGrid[0].length;
-        int dp[][]=new int[n][m];
-        for(int[] ele:dp)
-        Arrays.fill(ele,-1);
-        return helper(n-1,m-1,obstacleGrid,dp);
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] temp = new int[m][n];
+
+        // Start cell
+        temp[0][0] = obstacleGrid[0][0] == 1 ? 0 : 1;
+
+        // First row
+        for (int j = 1; j < n; j++) {
+            temp[0][j] = (obstacleGrid[0][j] == 1 || temp[0][j - 1] == 0) ? 0 : 1;
+        }
+
+        // First column
+        for (int i = 1; i < m; i++) {
+            temp[i][0] = (obstacleGrid[i][0] == 1 || temp[i - 1][0] == 0) ? 0 : 1;
+        }
+
+        // Rest of the grid
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == 1) {
+                    temp[i][j] = 0;
+                } else {
+                    temp[i][j] = temp[i - 1][j] + temp[i][j - 1];
+                }
+            }
+        }
+
+        return temp[m - 1][n - 1];
     }
 }
